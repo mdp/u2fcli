@@ -1,10 +1,10 @@
 package cmd
 
 import (
-	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/flynn/u2f/u2fhid"
@@ -18,7 +18,6 @@ var sigCmd = &cobra.Command{
 	Short: "Sign a challenge with the provided Key Handle",
 	Long:  "Sign a challenge with the provided Key Handle",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("sig called")
 		devices, err := u2fhid.Devices()
 		if err != nil {
 			fmt.Printf("Error: %v", err)
@@ -26,27 +25,23 @@ var sigCmd = &cobra.Command{
 
 		device := devices[0]
 
-		if challenge == "" {
+		if challengeFlag == "" {
 			fmt.Println("Please supply the challenge using -challenge option.")
 			return
 		}
-		if appID == "" {
+		if appIDFlag == "" {
 			fmt.Println("Please supply the appID using -appid option.")
 			return
 		}
-		if keyHandle == "" {
+		if keyHandleFlag == "" {
 			fmt.Println("Please supply a valid Key Handle using -keyhandle option.")
 			return
 		}
-		h := sha256.New()
-		h.Write([]byte(appID))
-		appIDHash := h.Sum(nil)
 
-		h = sha256.New()
-		h.Write([]byte(challenge))
-		challengeHash := h.Sum(nil)
+		appIDHash := sum256(appIDFlag)
+		challengeHash := sum256(challengeFlag)
 
-		keyHandleBytes, err := base64.RawURLEncoding.DecodeString(keyHandle)
+		keyHandleBytes, err := base64.RawURLEncoding.DecodeString(keyHandleFlag)
 		if err != nil {
 			fmt.Println("Keyhandle is not valid url encoded base64")
 		}
@@ -54,10 +49,10 @@ var sigCmd = &cobra.Command{
 		dev, err := u2fhid.Open(device)
 		defer dev.Close()
 		if err != nil {
-			log.Fatal(err)
+			fmt.Printf("Error: %s", err)
+			os.Exit(1)
 		}
 
-		log.Println("signing, provide user presence")
 		t := u2ftoken.NewToken(dev)
 
 		req := u2ftoken.AuthenticateRequest{
@@ -67,10 +62,11 @@ var sigCmd = &cobra.Command{
 		}
 
 		if err := t.CheckAuthenticate(req); err != nil {
-			log.Fatal(err)
+			fmt.Printf("Error: %s", err)
+			os.Exit(1)
 		}
 
-		log.Println("authenticating, provide user presence")
+		fmt.Println("Authenticating, press the button on your U2F device")
 		var resp *u2ftoken.AuthenticateResponse
 		for {
 			resp, err = t.Authenticate(req)
@@ -80,10 +76,12 @@ var sigCmd = &cobra.Command{
 			} else if err != nil {
 				log.Fatal(err)
 			}
-			log.Printf("counter = %d, signature = %x\n", resp.Counter, resp.Signature)
 			break
 		}
-		log.Printf("counter = %d, signature = %x\n", resp.Counter, resp.Signature)
+		fmt.Printf("\nCounter: %d\nSignature: %s\nComplete Response: %s\n",
+			resp.Counter,
+			base64.RawURLEncoding.EncodeToString(resp.Signature),
+			base64.RawURLEncoding.EncodeToString(resp.RawResponse))
 	},
 }
 

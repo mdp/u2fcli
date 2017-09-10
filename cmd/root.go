@@ -1,15 +1,24 @@
 package cmd
 
 import (
+	"crypto/sha256"
 	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
 )
 
-var keyHandle string
-var appID string
-var challenge string
+var keyHandleFlag string
+var appIDFlag string
+var challengeFlag string
+var publicKeyFlag string
+var signatureFlag string
+
+func sum256(s string) []byte {
+	h := sha256.New()
+	h.Write([]byte(s))
+	return h.Sum(nil)
+}
 
 // This represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -31,7 +40,9 @@ func Execute() {
 }
 
 func init() {
-	RootCmd.PersistentFlags().StringVar(&challenge, "challenge", "", "Challenge(string)")
-	RootCmd.PersistentFlags().StringVar(&appID, "appid", "", "Applicaiton ID(string)")
-	RootCmd.PersistentFlags().StringVar(&keyHandle, "keyhandle", "", "Key Handle ID(base64 string)")
+	RootCmd.PersistentFlags().StringVar(&challengeFlag, "challenge", "", "Challenge(string)")
+	RootCmd.PersistentFlags().StringVar(&appIDFlag, "appid", "", "Applicaiton ID(string)")
+	RootCmd.PersistentFlags().StringVar(&keyHandleFlag, "keyhandle", "", "Key Handle ID(base64 string)")
+	RootCmd.PersistentFlags().StringVar(&publicKeyFlag, "publickey", "", "Public Key of the signer")
+	RootCmd.PersistentFlags().StringVar(&signatureFlag, "signature", "", "Raw Signature from U2F 'sig'")
 }

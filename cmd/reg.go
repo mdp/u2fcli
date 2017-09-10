@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
 	"log"
@@ -29,21 +28,17 @@ u2fcli reg --challenge MyChallenge --appid https://mysite.com`,
 
 		device := devices[0]
 
-		if challenge == "" {
+		if challengeFlag == "" {
 			fmt.Println("Please supply the challenge using -challenge option.")
 			return
 		}
-		if appID == "" {
+		if appIDFlag == "" {
 			fmt.Println("Please supply the appID using -appid option.")
 			return
 		}
-		h := sha256.New()
-		h.Write([]byte(appID))
-		appIDHash := h.Sum(nil)
 
-		h = sha256.New()
-		h.Write([]byte(challenge))
-		challengeHash := h.Sum(nil)
+		appIDHash := sum256(appIDFlag)
+		challengeHash := sum256(challengeFlag)
 
 		dev, err := u2fhid.Open(device)
 		if err != nil {
