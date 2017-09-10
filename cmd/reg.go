@@ -3,7 +3,7 @@ package cmd
 import (
 	"encoding/base64"
 	"fmt"
-	"log"
+	"os"
 	"time"
 
 	"github.com/flynn/u2f/u2fhid"
@@ -20,7 +20,6 @@ Requires a challege and appID. For example:
 
 u2fcli reg --challenge MyChallenge --appid https://mysite.com`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("reg called")
 		devices, err := u2fhid.Devices()
 		if err != nil {
 			fmt.Printf("Error: %v", err)
@@ -42,32 +41,34 @@ u2fcli reg --challenge MyChallenge --appid https://mysite.com`,
 
 		dev, err := u2fhid.Open(device)
 		if err != nil {
-			log.Fatal(err)
+			fmt.Printf("Error opening device: %s\n", err)
+			os.Exit(1)
 		}
 		t := u2ftoken.NewToken(dev)
 
+		fmt.Println("Registering, press the button on your U2F device")
 		var res []byte
-		log.Println("registering, provide user presence")
 		for {
 			res, err = t.Register(u2ftoken.RegisterRequest{Challenge: challengeHash, Application: appIDHash})
 			if err == u2ftoken.ErrPresenceRequired {
 				time.Sleep(200 * time.Millisecond)
 				continue
 			} else if err != nil {
-				log.Fatal(err)
+				fmt.Printf("Error registering with device: %s\n", err)
+				os.Exit(1)
 			}
 			break
 		}
 		dev.Close()
 
-		log.Printf("registered: %s", base64.RawURLEncoding.EncodeToString(res))
+		fmt.Printf("Registered Data: %s\n", base64.RawURLEncoding.EncodeToString(res))
 		pubKey := res[1:66]
 		res = res[66:]
 		khLen := int(res[0])
 		res = res[1:]
 		keyHandle := res[:khLen]
-		log.Printf("pubKey: %s", base64.RawURLEncoding.EncodeToString(pubKey))
-		log.Printf("keyHandle: %s", base64.RawURLEncoding.EncodeToString(keyHandle))
+		fmt.Printf("Public Key: %s\n", base64.RawURLEncoding.EncodeToString(pubKey))
+		fmt.Printf("Key Handle: %s\n", base64.RawURLEncoding.EncodeToString(keyHandle))
 	},
 }
 
