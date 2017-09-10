@@ -6,10 +6,10 @@ u2fcli is a tool designed to handing registering, signing, and verify U2F tokens
 
 `go get github.com/mdp/u2fcli`
 
-### Usage
+## Usage
 
 
-#### Registration
+### Registration
 
 Choose a challenge and App ID to send to the U2F device
 
@@ -22,7 +22,7 @@ Public Key: BCwSU4NEplH1-UYlohohwnm68YU9H54RPlCffNWa83xlOQWQ19WrqS8J17HWXk5vAFF2
 Key Handle: jQJJNxXR3yrtvHZRbHCyRvtfRn_yGPCz5dYfAcOMlUmIU6gakq79A7WBbf4ju8fG7gXYTfVCyAGHHS_XEv2Bew
 ```
 
-#### Signing
+### Signing
 
 Using the `Key Handle` from above, we can ask the U2F token to sign a challenge
 
@@ -35,7 +35,7 @@ Signature: MEQCICYcvvB7x_lzj2pFZ1IIH80kp9GlHjm0NE3nVrI6ZYvAAiB4ilXXEIUPRGhzgETi_
 Raw Response: AQAAAB8wRAIgJhy-8HvH-XOPakVnUggfzSSn0aUeObQ0TedWsjpli8ACIHiKVdcQhQ9EaHOAROL_CLcgKvJXp4-e46yMgmoIXWCt
 ```
 
-#### Verifying
+### Verifying
 
 Finally, we can verify the `Raw Response` from above by providing it to u2fcli along with the `Public Key` we recieved at registration.
 
