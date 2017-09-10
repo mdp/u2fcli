@@ -1,6 +1,6 @@
 # u2fcli
 
-u2fcli is a tool designed to handing registering, signing, and verify U2F tokens on the command line.
+u2fcli is a tool designed to handle registering, signing, and verifying U2F tokens on the command line.
 
 ## Install
 
