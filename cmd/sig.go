@@ -78,7 +78,7 @@ var sigCmd = &cobra.Command{
 			}
 			break
 		}
-		fmt.Printf("\nCounter: %d\nSignature: %s\nComplete Response: %s\n",
+		fmt.Printf("\nCounter: %d\nSignature: %s\nRaw Response: %s\n",
 			resp.Counter,
 			base64.RawURLEncoding.EncodeToString(resp.Signature),
 			base64.RawURLEncoding.EncodeToString(resp.RawResponse))
