@@ -20,21 +20,27 @@ var sigCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		devices, err := u2fhid.Devices()
 		if err != nil {
-			fmt.Printf("Error: %v", err)
+			fmt.Fprintf(os.Stderr, "Error: %v", err)
+			os.Exit(1)
+		}
+
+		if len(devices) == 0 {
+			fmt.Fprintln(os.Stderr, "Error: No devices found")
+			os.Exit(1)
 		}
 
 		device := devices[0]
 
 		if challengeFlag == "" {
-			fmt.Println("Please supply the challenge using -challenge option.")
+			fmt.Fprintln(os.Stderr, "Please supply the challenge using -challenge option.")
 			return
 		}
 		if appIDFlag == "" {
-			fmt.Println("Please supply the appID using -appid option.")
+			fmt.Fprintln(os.Stderr, "Please supply the appID using -appid option.")
 			return
 		}
 		if keyHandleFlag == "" {
-			fmt.Println("Please supply a valid Key Handle using -keyhandle option.")
+			fmt.Fprintln(os.Stderr, "Please supply a valid Key Handle using -keyhandle option.")
 			return
 		}
 
@@ -43,13 +49,14 @@ var sigCmd = &cobra.Command{
 
 		keyHandleBytes, err := base64.RawURLEncoding.DecodeString(keyHandleFlag)
 		if err != nil {
-			fmt.Println("Keyhandle is not valid url encoded base64")
+			fmt.Fprintln(os.Stderr, "Keyhandle is not valid url encoded base64")
 		}
 
 		dev, err := u2fhid.Open(device)
 		defer dev.Close()
+
 		if err != nil {
-			fmt.Printf("Error: %s", err)
+			fmt.Fprintf(os.Stderr, "Error: %s", err)
 			os.Exit(1)
 		}
 
@@ -62,11 +69,12 @@ var sigCmd = &cobra.Command{
 		}
 
 		if err := t.CheckAuthenticate(req); err != nil {
-			fmt.Printf("Error: %s", err)
+			fmt.Fprintf(os.Stderr, "Error: %s", err)
 			os.Exit(1)
 		}
 
-		fmt.Println("Authenticating, press the button on your U2F device")
+		fmt.Fprintln(os.Stderr, "Authenticating, press the button on your U2F device")
+
 		var resp *u2ftoken.AuthenticateResponse
 		for {
 			resp, err = t.Authenticate(req)
@@ -78,6 +86,7 @@ var sigCmd = &cobra.Command{
 			}
 			break
 		}
+
 		fmt.Printf("\nCounter: %d\nSignature: %s\nRaw Response: %s\n",
 			resp.Counter,
 			base64.RawURLEncoding.EncodeToString(resp.Signature),

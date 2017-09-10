@@ -73,6 +73,29 @@ func verifyAuthSignature(ar authResp, pubKey *ecdsa.PublicKey, appID string, cli
 	return nil
 }
 
+func verify(appID, challenge string, signature, publicKey []byte) error {
+	ar, err := parseSignResponse(signature)
+	if err != nil {
+		return fmt.Errorf("Error parsing signature: %s\n", err)
+	}
+
+	x, y := elliptic.Unmarshal(elliptic.P256(), publicKey)
+	if x == nil {
+		return fmt.Errorf("Error unmarshalling public key")
+	}
+
+	pubKey := &ecdsa.PublicKey{}
+	pubKey.Curve = elliptic.P256()
+	pubKey.X = x
+	pubKey.Y = y
+
+	if err := verifyAuthSignature(*ar, pubKey, appID, []byte(challenge)); err != nil {
+		return fmt.Errorf("Signature did not verify")
+	}
+
+	return nil
+}
+
 // verCmd respresents the verify command
 var verCmd = &cobra.Command{
 	Use:   "ver",
@@ -81,32 +104,21 @@ var verCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		publicKeyBytes, err := base64.RawURLEncoding.DecodeString(publicKeyFlag)
 		if err != nil {
-			fmt.Println("Public Key is not valid url encoded base64")
+			fmt.Fprintln(os.Stderr, "Public Key is not valid url encoded base64")
 			os.Exit(1)
 		}
+
 		signatureBytes, err := base64.RawURLEncoding.DecodeString(signatureFlag)
 		if err != nil {
 			fmt.Println("Signature is not valid url encoded base64")
 			os.Exit(1)
 		}
-		ar, err := parseSignResponse(signatureBytes)
-		if err != nil {
-			fmt.Printf("Error parsing signature: %s\n", err)
+
+		if err := verify(appIDFlag, challengeFlag, signatureBytes, publicKeyBytes); err != nil {
+			fmt.Fprintf(os.Stderr, "Signature did not verify: %s", err)
 			os.Exit(1)
 		}
-		pubKey := &ecdsa.PublicKey{}
-		x, y := elliptic.Unmarshal(elliptic.P256(), publicKeyBytes)
-		if x == nil {
-			fmt.Println("Error unmarshalling public key")
-			os.Exit(1)
-		}
-		pubKey.Curve = elliptic.P256()
-		pubKey.X = x
-		pubKey.Y = y
-		if err := verifyAuthSignature(*ar, pubKey, appIDFlag, []byte(challengeFlag)); err != nil {
-			fmt.Println("Signature did not verify")
-			os.Exit(1)
-		}
+
 		fmt.Println("Signature verified")
 	},
 }

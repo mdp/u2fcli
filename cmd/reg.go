@@ -22,17 +22,23 @@ u2fcli reg --challenge MyChallenge --appid https://mysite.com`,
 	Run: func(cmd *cobra.Command, args []string) {
 		devices, err := u2fhid.Devices()
 		if err != nil {
-			fmt.Printf("Error: %v", err)
+			fmt.Fprintf(os.Stderr, "Error: %v", err)
+			os.Exit(1)
+		}
+
+		if len(devices) == 0 {
+			fmt.Fprintln(os.Stderr, "Error: No devices found")
+			os.Exit(1)
 		}
 
 		device := devices[0]
 
 		if challengeFlag == "" {
-			fmt.Println("Please supply the challenge using -challenge option.")
+			fmt.Println(os.Stderr, "Please supply the challenge using -challenge option.")
 			return
 		}
 		if appIDFlag == "" {
-			fmt.Println("Please supply the appID using -appid option.")
+			fmt.Fprintln(os.Stderr, "Please supply the appID using -appid option.")
 			return
 		}
 
@@ -40,13 +46,16 @@ u2fcli reg --challenge MyChallenge --appid https://mysite.com`,
 		challengeHash := sum256(challengeFlag)
 
 		dev, err := u2fhid.Open(device)
+		defer dev.Close()
+
 		if err != nil {
-			fmt.Printf("Error opening device: %s\n", err)
+			fmt.Fprintf(os.Stderr, "Error opening device: %s\n", err)
 			os.Exit(1)
 		}
 		t := u2ftoken.NewToken(dev)
 
-		fmt.Println("Registering, press the button on your U2F device")
+		fmt.Println(os.Stderr, "Registering, press the button on your U2F device")
+
 		var res []byte
 		for {
 			res, err = t.Register(u2ftoken.RegisterRequest{Challenge: challengeHash, Application: appIDHash})
@@ -54,12 +63,11 @@ u2fcli reg --challenge MyChallenge --appid https://mysite.com`,
 				time.Sleep(200 * time.Millisecond)
 				continue
 			} else if err != nil {
-				fmt.Printf("Error registering with device: %s\n", err)
+				fmt.Fprintf(os.Stderr, "Error registering with device: %s\n", err)
 				os.Exit(1)
 			}
 			break
 		}
-		dev.Close()
 
 		fmt.Printf("Registered Data: %s\n", base64.RawURLEncoding.EncodeToString(res))
 		pubKey := res[1:66]
