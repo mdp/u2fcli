@@ -115,7 +115,7 @@ var verCmd = &cobra.Command{
 		}
 
 		if err := verify(appIDFlag, challengeFlag, signatureBytes, publicKeyBytes); err != nil {
-			fmt.Fprintf(os.Stderr, "Signature did not verify: %s", err)
+			fmt.Fprintf(os.Stderr, "Signature did not verify: %s\n", err)
 			os.Exit(1)
 		}
 

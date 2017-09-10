@@ -15,11 +15,13 @@ Choose a challenge and App ID to send to the U2F device
 
 ```
 [mdp u2fcli]$ u2fcli reg --challenge complexChallengeGoesHere --appid https://mdp.im
-
 Registering, press the button on your U2F device
-Registered Data: BQQsElODRKZR9flGJaIaIcJ5uvGFPR-eET5Qn3zVmvN8ZTkFkNfVq6kvCdex1l5ObwBRdoHBjJ__9YV8QoMmMcP5QI0CSTcV0d8q7bx2UWxwskb7X0Z_8hjws-XWHwHDjJVJiFOoGpKu_QO1gW3-I7vHxu4F2E31QsgBhx0v1xL9gXswggJEMIIBLqADAgECAgRVYr6gMAsGCSqGSIb3DQEBCzAuMSwwKgYDVQQDEyNZdWJpY28gVTJGIFJvb3QgQ0EgU2VyaWFsIDQ1NzIwMDYzMTAgFw0xNDA4MDEwMDAwMDBaGA8yMDUwMDkwNDAwMDAwMFowKjEoMCYGA1UEAwwfWXViaWNvIFUyRiBFRSBTZXJpYWwgMTQzMjUzNDY4ODBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABEszH3c9gUS5mVy-RYVRfhdYOqR2I2lcvoWsSCyAGfLJuUZ64EWw5m8TGy6jJDyR_aYC4xjz_F2NKnq65yvRQwmjOzA5MCIGCSsGAQQBgsQKAgQVMS4zLjYuMS40LjEuNDE0ODIuMS41MBMGCysGAQQBguUcAgEBBAQDAgUgMAsGCSqGSIb3DQEBCwOCAQEArBbZs262s6m3bXWUs09Z9Pc-28n96yk162tFHKv0HSXT5xYU10cmBMpypXjjI-23YARoXwXn0bm-BdtulED6xc_JMqbK-uhSmXcu2wJ4ICA81BQdPutvaizpnjlXgDJjq6uNbsSAp98IStLLp7fW13yUw-vAsWb5YFfK9f46Yx6iakM3YqNvvs9M9EUJYl_VrxBJqnyLx2iaZlnpr13o8NcsKIJRdMUOBqt_ageQg3ttsyq_3LyoNcu7CQ7x8NmeCGm_6eVnZMQjDmwFdymwEN4OxfnM5MkcKCYhjqgIGruWkVHsFnJa8qjZXneVvKoiepuUQyDEJ2GcqvhU2YKY1zBEAiBhRCTflfJIhFb3k_Rkm3oT6uHcWKWuJUS1IJmCLYNvCAIgZ95Ojyj1cVSenQGcQUuOicnaClx7x_z_WhCeUwHARwU
-Public Key: BCwSU4NEplH1-UYlohohwnm68YU9H54RPlCffNWa83xlOQWQ19WrqS8J17HWXk5vAFF2gcGMn__1hXxCgyYxw_k
-Key Handle: jQJJNxXR3yrtvHZRbHCyRvtfRn_yGPCz5dYfAcOMlUmIU6gakq79A7WBbf4ju8fG7gXYTfVCyAGHHS_XEv2Bew
+
+{
+  "KeyHandle": "0JGeJ3MhvDzK_YjKhK4VkPOegGn0x3wxJENJ8J1JanozbSr8Elz2KRcARLh2sF__l_Vof2xiydPw6CEicpzs0A",
+  "PublicKey": "BPQPBz7NV3LwksVwjbGdn7ODP5omKHt8CetrHnDZeUUxmFChHcKuYNHgLm0HdtsSD6p7cjrFZdb9mNOLg3huRcI",
+  "RegisteredData": "0JGeJ3MhvDzK_YjKhK4VkPOegGn0x3wxJENJ8J1JanozbSr8Elz2KRcARLh2sF__l_Vof2xiydPw6CEicpzs0DCCAkQwggEuoAMCAQICBFVivqAwCwYJKoZIhvcNAQELMC4xLDAqBgNVBAMTI1l1YmljbyBVMkYgUm9vdCBDQSBTZXJpYWwgNDU3MjAwNjMxMCAXDTE0MDgwMTAwMDAwMFoYDzIwNTAwOTA0MDAwMDAwWjAqMSgwJgYDVQQDDB9ZdWJpY28gVTJGIEVFIFNlcmlhbCAxNDMyNTM0Njg4MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAESzMfdz2BRLmZXL5FhVF-F1g6pHYjaVy-haxILIAZ8sm5RnrgRbDmbxMbLqMkPJH9pgLjGPP8XY0qerrnK9FDCaM7MDkwIgYJKwYBBAGCxAoCBBUxLjMuNi4xLjQuMS40MTQ4Mi4xLjUwEwYLKwYBBAGC5RwCAQEEBAMCBSAwCwYJKoZIhvcNAQELA4IBAQCsFtmzbrazqbdtdZSzT1n09z7byf3rKTXra0Ucq_QdJdPnFhTXRyYEynKleOMj7bdgBGhfBefRub4F226UQPrFz8kypsr66FKZdy7bAnggIDzUFB0-629qLOmeOVeAMmOrq41uxICn3whK0sunt9bXfJTD68CxZvlgV8r1_jpjHqJqQzdio2--z0z0RQliX9WvEEmqfIvHaJpmWemvXejw1ywoglF0xQ4Gq39qB5CDe22zKr_cvKg1y7sJDvHw2Z4Iab_p5WdkxCMObAV3KbAQ3g7F-czkyRwoJiGOqAgau5aRUewWclryqNled5W8qiJ6m5RDIMQnYZyq-FTZgpjXMEUCIEwCqGbDrEYu0F2vVl6IC_5u3M3WVZGm3A6efdh55j1aAiEAooYy3e8q5eakgpXC8FPy0VdGphzV6sjbpuExuJdCqlk"
+}
 ```
 
 ### Signing
@@ -27,19 +29,28 @@ Key Handle: jQJJNxXR3yrtvHZRbHCyRvtfRn_yGPCz5dYfAcOMlUmIU6gakq79A7WBbf4ju8fG7gXY
 Using the `Key Handle` from above, we can ask the U2F token to sign a challenge
 
 ```
-[mdp u2fcli]$ u2fcli sig --challenge anotherChallengeGoesHere --appid https://mdp.im --keyhandle jQJJNxXR3yrtvHZRbHCyRvtfRn_yGPCz5dYfAcOMlUmIU6gakq79A7WBbf4ju8fG7gXYTfVCyAGHHS_XEv2Bew
+[mdp u2fcli]$ u2fcli sig --appid https://mdp.im --challenge anotherChallenge --keyhandle 0JGeJ3MhvDzK_YjKhK4VkPOegGn0x3wxJENJ8J1JanozbSr8Elz2KRcARLh2sF__l_Vof2xiydPw6CEicpzs0A
 Authenticating, press the button on your U2F device
 
-Counter: 31
-Signature: MEQCICYcvvB7x_lzj2pFZ1IIH80kp9GlHjm0NE3nVrI6ZYvAAiB4ilXXEIUPRGhzgETi_wi3ICryV6ePnuOsjIJqCF1grQ
-Raw Response: AQAAAB8wRAIgJhy-8HvH-XOPakVnUggfzSSn0aUeObQ0TedWsjpli8ACIHiKVdcQhQ9EaHOAROL_CLcgKvJXp4-e46yMgmoIXWCt
+{
+  "Counter": 33,
+  "Signature": "AQAAACEwRQIgetEQfx2p2SB7ch2JtvDYxjqTekMfZuDPjrJ0deNTXysCIQD5LehJ4gXf1vpJ37_XWefnSkRzwfwZ3Uffq7jWWTZYkw"
+}
 ```
 
 ### Verifying
 
-Finally, we can verify the `Raw Response` from above by providing it to u2fcli along with the `Public Key` we recieved at registration.
+Finally, we can verify the `Signature` from above by providing it to u2fcli along with the `PublicKey` we recieved at registration.
 
 ```
-[mdp u2fcli]$ u2fcli ver --challenge complexChallengeGoesHere --appid https://mdp.im --publickey BCwSU4NEplH1-UYlohohwnm68YU9H54RPlCffNWa83xlOQWQ19WrqS8J17HWXk5vAFF2gcGMn__1hXxCgyYxw_k --signature AQAAAB8wRAIgJhy-8HvH-XOPakVnUggfzSSn0aUeObQ0TedWsjpli8ACIHiKVdcQhQ9EaHOAROL_CLcgKvJXp4-e46yMgmoIXWCt
+[mdp u2fcli]$ u2fcli ver --appid https://mdp.im --challenge anotherChallenge --publickey BPQPBz7NV3LwksVwjbGdn7ODP5omKHt8CetrHnDZeUUxmFChHcKuYNHgLm0HdtsSD6p7cjrFZdb9mNOLg3huRcI --signature AQAAACEwRQIgetEQfx2p2SB7ch2JtvDYxjqTekMfZuDPjrJ0deNTXysCIQD5LehJ4gXf1vpJ37_XWefnSkRzwfwZ3Uffq7jWWTZYkw
+
 Signature verified
 ```
+
+
+## Credit
+
+This tool wouldn't be possible without the work of https://github.com/flynn/u2f which
+handles all the interactions with the hardware and USB HID devices
+

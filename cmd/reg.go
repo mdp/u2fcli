@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"os"
 	"time"
@@ -22,7 +23,7 @@ u2fcli reg --challenge MyChallenge --appid https://mysite.com`,
 	Run: func(cmd *cobra.Command, args []string) {
 		devices, err := u2fhid.Devices()
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error: %v", err)
+			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 			os.Exit(1)
 		}
 
@@ -54,7 +55,7 @@ u2fcli reg --challenge MyChallenge --appid https://mysite.com`,
 		}
 		t := u2ftoken.NewToken(dev)
 
-		fmt.Println(os.Stderr, "Registering, press the button on your U2F device")
+		fmt.Fprintln(os.Stderr, "Registering, press the button on your U2F device")
 
 		var res []byte
 		for {
@@ -69,14 +70,22 @@ u2fcli reg --challenge MyChallenge --appid https://mysite.com`,
 			break
 		}
 
-		fmt.Printf("Registered Data: %s\n", base64.RawURLEncoding.EncodeToString(res))
+		// Parse the response
 		pubKey := res[1:66]
 		res = res[66:]
 		khLen := int(res[0])
 		res = res[1:]
 		keyHandle := res[:khLen]
-		fmt.Printf("Public Key: %s\n", base64.RawURLEncoding.EncodeToString(pubKey))
-		fmt.Printf("Key Handle: %s\n", base64.RawURLEncoding.EncodeToString(keyHandle))
+
+		// output for easier consumption by another program
+		output := map[string]interface{}{
+			"RegisteredData": base64.RawURLEncoding.EncodeToString(res),
+			"PublicKey":      base64.RawURLEncoding.EncodeToString(pubKey),
+			"KeyHandle":      base64.RawURLEncoding.EncodeToString(keyHandle),
+		}
+		jsonOut, _ := json.MarshalIndent(output, "", "  ")
+
+		fmt.Println(string(jsonOut))
 	},
 }
 

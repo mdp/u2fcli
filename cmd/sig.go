@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -20,7 +21,7 @@ var sigCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		devices, err := u2fhid.Devices()
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error: %v", err)
+			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 			os.Exit(1)
 		}
 
@@ -56,7 +57,7 @@ var sigCmd = &cobra.Command{
 		defer dev.Close()
 
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error: %s", err)
+			fmt.Fprintf(os.Stderr, "Error: %s\n", err)
 			os.Exit(1)
 		}
 
@@ -69,7 +70,7 @@ var sigCmd = &cobra.Command{
 		}
 
 		if err := t.CheckAuthenticate(req); err != nil {
-			fmt.Fprintf(os.Stderr, "Error: %s", err)
+			fmt.Fprintf(os.Stderr, "Error: %s\n", err)
 			os.Exit(1)
 		}
 
@@ -87,10 +88,15 @@ var sigCmd = &cobra.Command{
 			break
 		}
 
-		fmt.Printf("\nCounter: %d\nSignature: %s\nRaw Response: %s\n",
-			resp.Counter,
-			base64.RawURLEncoding.EncodeToString(resp.Signature),
-			base64.RawURLEncoding.EncodeToString(resp.RawResponse))
+		// output for easier consumption by another program
+		output := map[string]interface{}{
+			"Counter":   resp.Counter,
+			"Signature": base64.RawURLEncoding.EncodeToString(resp.RawResponse),
+		}
+		jsonOut, _ := json.MarshalIndent(output, "", "  ")
+
+		fmt.Println(string(jsonOut))
+
 	},
 }
 
