@@ -19,18 +19,7 @@ var sigCmd = &cobra.Command{
 	Short: "Sign a challenge with the provided Key Handle",
 	Long:  "Sign a challenge with the provided Key Handle",
 	Run: func(cmd *cobra.Command, args []string) {
-		devices, err := u2fhid.Devices()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-			os.Exit(1)
-		}
-
-		if len(devices) == 0 {
-			fmt.Fprintln(os.Stderr, "Error: No devices found")
-			os.Exit(1)
-		}
-
-		device := devices[0]
+		device := getDevice()
 
 		if challengeFlag == "" {
 			fmt.Fprintln(os.Stderr, "Please supply the challenge using -challenge option.")

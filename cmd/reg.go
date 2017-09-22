@@ -21,18 +21,7 @@ Requires a challege and appID. For example:
 
 u2fcli reg --challenge MyChallenge --appid https://mysite.com`,
 	Run: func(cmd *cobra.Command, args []string) {
-		devices, err := u2fhid.Devices()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-			os.Exit(1)
-		}
-
-		if len(devices) == 0 {
-			fmt.Fprintln(os.Stderr, "Error: No devices found")
-			os.Exit(1)
-		}
-
-		device := devices[0]
+		device := getDevice()
 
 		if challengeFlag == "" {
 			fmt.Println(os.Stderr, "Please supply the challenge using -challenge option.")
@@ -55,7 +44,7 @@ u2fcli reg --challenge MyChallenge --appid https://mysite.com`,
 		}
 		t := u2ftoken.NewToken(dev)
 
-		fmt.Fprintln(os.Stderr, "Registering, press the button on your U2F device")
+		fmt.Fprintf(os.Stderr, "Registering, press the button on your U2F device #%d [%s]", deviceNum, device.Product)
 
 		var res []byte
 		for {
