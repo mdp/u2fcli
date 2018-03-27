@@ -14,7 +14,8 @@ u2fcli is a tool designed to handle registering, signing, and verifying U2F toke
 Choose a challenge and App ID to send to the U2F device
 
 ```
-[mdp u2fcli]$ u2fcli reg --challenge complexChallengeGoesHere --appid https://mdp.im
+[mdp u2fcli]$ u2fcli reg --challenge complexChallengeGoesHere \
+  --appid https://mdp.im
 Registering, press the button on your U2F device
 
 {
@@ -29,7 +30,9 @@ Registering, press the button on your U2F device
 Using the `Key Handle` from above, we can ask the U2F token to sign a challenge
 
 ```
-[mdp u2fcli]$ u2fcli sig --appid https://mdp.im --challenge anotherChallenge --keyhandle 0JGeJ3MhvDzK_YjKhK4VkPOegGn0x3wxJENJ8J1JanozbSr8Elz2KRcARLh2sF__l_Vof2xiydPw6CEicpzs0A
+[mdp u2fcli]$ u2fcli sig --appid https://mdp.im \
+  --challenge anotherChallenge \
+  --keyhandle 0JGeJ3MhvDzK_YjKhK4VkPOegGn0x3wxJENJ8J1JanozbSr8Elz2KRcARLh2sF__l_Vof2xiydPw6CEicpzs0A
 Authenticating, press the button on your U2F device
 
 {
@@ -43,7 +46,10 @@ Authenticating, press the button on your U2F device
 Finally, we can verify the `Signature` from above by providing it to u2fcli along with the `PublicKey` we recieved at registration.
 
 ```
-[mdp u2fcli]$ u2fcli ver --appid https://mdp.im --challenge anotherChallenge --publickey BPQPBz7NV3LwksVwjbGdn7ODP5omKHt8CetrHnDZeUUxmFChHcKuYNHgLm0HdtsSD6p7cjrFZdb9mNOLg3huRcI --signature AQAAACEwRQIgetEQfx2p2SB7ch2JtvDYxjqTekMfZuDPjrJ0deNTXysCIQD5LehJ4gXf1vpJ37_XWefnSkRzwfwZ3Uffq7jWWTZYkw
+[mdp u2fcli]$ u2fcli ver --appid https://mdp.im \
+  --challenge anotherChallenge \
+  --publickey BPQPBz7NV3LwksVwjbGdn7ODP5omKHt8CetrHnDZeUUxmFChHcKuYNHgLm0HdtsSD6p7cjrFZdb9mNOLg3huRcI \
+  --signature AQAAACEwRQIgetEQfx2p2SB7ch2JtvDYxjqTekMfZuDPjrJ0deNTXysCIQD5LehJ4gXf1vpJ37_XWefnSkRzwfwZ3Uffq7jWWTZYkw
 
 Signature verified
 ```
